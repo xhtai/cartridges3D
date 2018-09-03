@@ -1,0 +1,29 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# cartridges3D
+
+`cartridges` adapted for 3D topographies. 
+
+## Installation
+
+You can install `cartridges3D` from github with:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("xhtai/cartridges3D")
+```
+
+## License
+The `cartridges3D` package is licensed under GPLv3 (http://www.gnu.org/licenses/gpl.html).

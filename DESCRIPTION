@@ -1,0 +1,27 @@
+Package: cartridges3D
+Title: Algorithm to Compare Cartridge Case Images
+Version: 0.0.0.9000
+Authors@R: person("Xiao Hui", "Tai", email = "xtai@andrew.cmu.edu", role = c("aut", "cre"))
+Description: Reads and plots cartridge case images. Implements an 
+	algorithm to compare cartridge case images after pre-processing. 
+	Produces a similarity score for each pairwise comparison and 
+	computes the probability of obtaining a higher score by chance. 
+	This is work in progress.
+URL: https://github.com/xhtai/cartridges
+Depends:
+    R (>= 3.0)
+Imports:
+	x3ptools,
+	methods,
+	Matrix
+Suggests:
+	fields,
+	imager,
+	purrr,
+	dplyr,
+	plyr,
+	pracma,
+	EBImage
+License: GPL-3
+LazyData: true
+RoxygenNote: 6.1.0
