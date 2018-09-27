@@ -7,21 +7,17 @@
 allPreprocess3D(fileName)
 }
 \arguments{
-\item{fileName}{location of image file. This function has been tested on
-\code{png} files.}
+\item{fileName}{location of image file.}
 }
 \value{
-An image matrix, cropped to the smallest rectangle containing the
-  valid breechface area. Non-breechface pixels are set to 0. After all
-  pre-processing, possible pixel values are -510 to 510.
+A matrix of processed depth values. Non-breechface pixels are set to
+  0.
 }
 \description{
-Images must be of the standard format as provided in the NIST Ballistics and
-Research Toolmark Database. The dimensions are 1944 x 2592 pixels, and images
-are on a 255-grayscale. Here we use ring light images. This function performs
+Images must be x3p images containing 3D topographies. This function performs
 all the pre-processing steps, consisting of \itemize{ \item{Automatically
 selecting the breechface marks} \item{Leveling the image} \item{Removing
-circular symmetry} \item{Removing outliers and filtering.} }
+circular symmetry} \item{Filtering.} }
 }
 \examples{
 \dontrun{

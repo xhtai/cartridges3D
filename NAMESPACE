@@ -2,7 +2,9 @@
 
 export(LucasKanadeEuclidean)
 export(allPreprocess3D)
+export(calculateCCFmaxNew)
 export(compareTwo3D)
+export(comparison)
 export(findPlaneRansac)
 export(fitBasis)
 export(gaussianFilter3D)
