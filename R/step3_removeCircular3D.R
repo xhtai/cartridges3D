@@ -1,13 +1,12 @@
 #' Remove circular symmetry of an image
 #'
-#' Given a 1769 x 1769 image matrix, fits a circularly symmetric model on the
+#' Given a 701 x 701 image matrix, fits a circularly symmetric model on the
 #' image and returns the residuals. Areas that are not part of the breechface
-#' impression are set to NA. If this is run after \code{levelBF}, removing
-#' residuals again means that possible values are -510 to 510.
+#' impression are set to NA.
 #'
-#' @param inputImage 1769 x 1769 matrix
+#' @param inputImage 701 x 701 matrix
 #'
-#' @return A 1769 x 1769 image matrix.
+#' @return A 701 x 701 image matrix.
 #'
 #' @examples
 #' \dontrun{
@@ -21,14 +20,8 @@
 #' @export
 
 removeCircular3D <- function(inputImage) {
-    # pad
-    dim1 <- dim(inputImage)
-    padded <- matrix(0, nrow = 701, ncol = 701)
-    row_start <- floor((701 - dim1[1]) / 2)
-    col_start <- floor((701 - dim1[2]) / 2)
-    padded[(row_start + 1):(row_start + dim1[1]), (col_start + 1):(col_start + dim1[2])] <- inputImage
 
-    basis <- fitBasis(padded, basis701)
+    basis <- fitBasis(inputImage, basis701)
     basis$basisFnNumber <- 1:length(basis701)
     out <- loess(basis$coef ~ basis$basisFnNumber)
     fittedOut <- fitted(out)
@@ -37,8 +30,7 @@ removeCircular3D <- function(inputImage) {
 
     ####### get fitted and residuals
     fitted <- getFitted(basis$fitted, basis701, 701)
-    residuals <- padded - fitted
-    residuals <- residuals[(row_start + 1):(row_start + dim1[1]), (col_start + 1):(col_start + dim1[2])]
+    residuals <- inputImage - fitted
 
     return(residuals)
 }

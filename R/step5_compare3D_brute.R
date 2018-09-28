@@ -50,11 +50,8 @@ comparison <- function(image1, image2) {
 #' metric for the two input images.
 #'
 #' @param image1 first image matrix
-#' @param image2 second image matrix. The two images do not need to be the same
-#'   size.
-#' @param pad logical value for whether the smaller image should be zero-padded.
-#'   The default is TRUE. Only set this to FALSE if the images are of the same
-#'   size and are square.
+#' @param image2 second image matrix. The two images should be the same size.
+#'   (update 9/28: input images are all 701 x 701)
 #'
 #' @return A list with four items: 1) maximum correlation taking into account
 #'   many possible rotations and translations of the second image, 2) the
@@ -67,29 +64,9 @@ comparison <- function(image1, image2) {
 #'
 #' @export
 
-calculateCCFmaxNew <- function(image1, image2, pad = TRUE) {
+calculateCCFmaxNew <- function(image1, image2) {
     image1_small <- EBImage::resize(image1, w = floor(dim(image1)[1]/4), h = floor(dim(image1)[2]/4))
     image2_small <- EBImage::resize(image2, w = floor(dim(image2)[1]/4), h = floor(dim(image2)[2]/4))
-
-    # pad if different sizes -- this makes them square but padImages() doesn't
-    if (pad == TRUE) {
-        dim1 <- dim(image1_small)
-        dim2 <- dim(image2_small)
-        max_size = max(c(dim1, dim2))
-        padded1 <- matrix(0, nrow = max_size, ncol = max_size)
-        padded2 <- matrix(0, nrow = max_size, ncol = max_size)
-
-        row_start <- floor((max_size - dim1[1]) / 2)
-        col_start <- floor((max_size - dim1[2]) / 2)
-        padded1[(row_start + 1):(row_start + dim1[1]), (col_start + 1):(col_start + dim1[2])] <- image1_small
-
-        row_start <- floor((max_size - dim2[1]) / 2)
-        col_start <- floor((max_size - dim2[2]) / 2)
-        padded2[(row_start + 1):(row_start + dim2[1]), (col_start + 1):(col_start + dim2[2])] <- image2_small
-
-        image1_small <- padded1
-        image2_small <- padded2
-    }
 
     thetas <- seq(from = -177.5, to = 180, by = 2.5)
     allResults <- data.frame(thetas = thetas, dx = NA, dy = NA, corr = NA)

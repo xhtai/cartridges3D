@@ -7,16 +7,15 @@
 removeCircular3D(inputImage)
 }
 \arguments{
-\item{inputImage}{1769 x 1769 matrix}
+\item{inputImage}{701 x 701 matrix}
 }
 \value{
-A 1769 x 1769 image matrix.
+A 701 x 701 image matrix.
 }
 \description{
-Given a 1769 x 1769 image matrix, fits a circularly symmetric model on the
+Given a 701 x 701 image matrix, fits a circularly symmetric model on the
 image and returns the residuals. Areas that are not part of the breechface
-impression are set to NA. If this is run after \code{levelBF}, removing
-residuals again means that possible values are -510 to 510.
+impression are set to NA.
 }
 \examples{
 \dontrun{

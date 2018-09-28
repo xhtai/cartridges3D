@@ -1,30 +1,3 @@
-#' Standardize 3D images
-#'
-#' Standardize topographies so that they have the same lateral resolution (6.25
-#' microns), and center and crop images (NOTE: first find plane and then
-#' standardize before further pre-processing) (TODO center and crop)
-#'
-#' @param surfaceMat matrix of depth values in microns
-#' @param lateralResMicrons lateral resolution of image
-#' @return Standardized image for further pre-processing.
-#' @examples
-#' \dontrun{
-#'     testImage <- standardize3D(testImage, lateralResMicrons)
-#' }
-#' @export
-#'
-standardize3D <- function(surfaceMat, lateralResMicrons){
-    # standardize the resolution to 6.25 which is the lowest resolution available
-    # ret <- imager::imresize(imager::as.cimg(ret), scale = .5, interpolation = 5)[, , , ]
-    # ret <- EBImage::resize(ret, w = floor(dim(ret)[1]/2), h = floor(dim(ret)[2]/2))
-    scale <- lateralResMicrons/6.25 # make everything 6.25
-	if (scale != 1) ret <- imager::resize(imager::as.cimg(surfaceMat), -scale * 100, -scale * 100, -100, interpolation_type = 5)[, , , ]
-    return(ret)
-}
-
-
-
-
 #' Plot an image
 #'
 #' @param image matrix of pixel values to be plotted
