@@ -3,6 +3,7 @@
 export(LucasKanadeEuclidean)
 export(allPreprocess3D)
 export(calculateCCFmaxNew)
+export(calculateCCFmaxNorm)
 export(compareTwo3D)
 export(comparison)
 export(findPlaneRansac)

@@ -7,7 +7,7 @@ Description: Reads and plots cartridge case images. Implements an
 	Produces a similarity score for each pairwise comparison and 
 	computes the probability of obtaining a higher score by chance. 
 	This is work in progress.
-URL: https://github.com/xhtai/cartridges
+URL: https://github.com/xhtai/cartridges3D
 Depends:
     R (>= 3.0)
 Imports:

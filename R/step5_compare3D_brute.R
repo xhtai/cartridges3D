@@ -140,3 +140,71 @@ bilinearInterpolation <- function(inputMatrix, thetaDegs) {
     return(outputMatrix)
 }
 
+
+
+#' Normalize image by mean and sum of squares before computing maximum
+#' cross-correlation
+#'
+#' Does the same thing as `calculateCCFmaxNew()`, except images are normalized
+#' by the square-root of the sum of squares. With both mean and sum of squares
+#' normalized, maximizing cross-correlation is equivalent to minimizing
+#' mean-squared error.
+#'
+#' @param image1 first image matrix
+#' @param image2 second image matrix. The two images should be the same size.
+#'
+#' @return A list with four items: 1) maximum correlation taking into account
+#'   many possible rotations and translations of the second image, 2) the
+#'   corresponding dx, the horizontal translation, 3) dy, the vertical
+#'   translation, and 4) theta, the corresponding rotation angle.
+#' @examples
+#' \dontrun{
+#' calculateCCFmax(processedExample, processedExample2)
+#' }
+#'
+#' @export
+calculateCCFmaxNorm <- function(image1, image2) {
+    image1_small <- EBImage::resize(image1, w = floor(dim(image1)[1]/4), h = floor(dim(image1)[2]/4))
+    image2_small <- EBImage::resize(image2, w = floor(dim(image2)[1]/4), h = floor(dim(image2)[2]/4))
+
+    thetas <- seq(from = -177.5, to = 180, by = 2.5)
+    allResults <- data.frame(thetas = thetas, dx = NA, dy = NA, corr = NA)
+
+    for (i in 1:length(thetas)) {
+        #if (i %% 10 == 0) cat(i, ", ")
+        rotated <- cartridges3D:::bilinearInterpolation(image2_small, thetas[i])
+        ## remove mean from image1_small and rotated
+        mean1 <- mean(image1_small[image1_small != 0])
+        image1_small[image1_small != 0] <- image1_small[image1_small != 0] - mean1
+        mean2 <- mean(rotated[rotated != 0])
+        rotated[rotated != 0] <- rotated[rotated != 0] - mean2
+        ####### left with rounding error. now normalize sum of squares -- divide by sqrt(sum of squares)
+        fact <- sqrt(sum(image1_small^2))
+        image1_small <- image1_small/fact
+        fact <- sqrt(sum(rotated^2))
+        rotated <- rotated/fact
+
+        out <- cartridges3D:::comparison(image1_small, rotated)
+        allResults[i, ] <- c(thetas[i], out$dx, out$dy, out$corr)
+    }
+
+    fineThetas <- seq(from = thetas[which.max(allResults$corr)] - 2, to = thetas[which.max(allResults$corr)] + 2, by = .5)
+    fineResults <- data.frame(fineThetas = fineThetas, dx = NA, dy = NA, corr = NA)
+
+    for (i in 1:length(fineThetas)) {
+        #if (i %% 10 == 0) cat(i, ", ")
+        rotated <- cartridges3D:::bilinearInterpolation(image2_small, fineThetas[i])
+        ## remove mean from image1_small and rotated
+        mean1 <- mean(image1_small[image1_small != 0])
+        image1_small[image1_small != 0] <- image1_small[image1_small != 0] - mean1
+        mean2 <- mean(rotated[rotated != 0])
+        rotated[rotated != 0] <- rotated[rotated != 0] - mean2
+        ####### left with rounding error
+        out <- cartridges3D:::comparison(image1_small, rotated)
+        fineResults[i, ] <- c(fineThetas[i], out$dx, out$dy, out$corr)
+    }
+    index <- which.max(fineResults$corr)
+    ret <- list(corr = fineResults$corr[index], dx = fineResults$dx[index], dy = fineResults$dy[index], theta = fineResults$fineThetas[index])
+
+    return(ret)
+}
