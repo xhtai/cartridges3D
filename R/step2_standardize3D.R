@@ -19,7 +19,11 @@ standardize3D <- function(surfaceMat, lateralResMicrons){
     # ret <- imager::imresize(imager::as.cimg(ret), scale = .5, interpolation = 5)[, , , ]
     # ret <- EBImage::resize(ret, w = floor(dim(ret)[1]/2), h = floor(dim(ret)[2]/2))
     scale <- lateralResMicrons/6.25 # make everything 6.25
-	if (scale != 1) ret <- imager::resize(imager::as.cimg(surfaceMat), -scale * 100, -scale * 100, -100, interpolation_type = 5)[, , , ]
+	if (scale != 1) {
+	    ret <- imager::resize(imager::as.cimg(surfaceMat), -scale * 100, -scale * 100, -100, interpolation_type = 5)[, , , ]
+	} else {
+	    ret <- imager::as.cimg(surfaceMat)
+	}
 
 	# pad with NAs
     dim1 <- dim(ret)
