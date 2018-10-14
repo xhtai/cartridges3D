@@ -14,7 +14,7 @@ Imports:
 	methods,
 	Matrix
 Suggests:
-	x3ptools
+	x3ptools,
 	fields,
 	imager,
 	purrr,
