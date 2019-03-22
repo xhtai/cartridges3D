@@ -163,4 +163,113 @@ linksAnalysis <- function(pairs, predCol, myCutoff, myMethod, hash1, hash2) {
     }
 }
 
+### modified from plot.PRROC from the PRROC package
+plotPRROC <- function(x, xlim = c(0, 1), ylim = c(0, 1), auc.main = TRUE,
+    # auc.type = c("integral", "davis.goadrich"),
+    legend = ifelse(is.logical(color) &
+        color == TRUE, 4, NA), xlab = NULL, ylab = NULL, main = NULL,
+    color = TRUE, lwd = 3, add = FALSE, scale.color = hsv(h = seq(0,
+        1, length = 100) * 0.8, s = 1, v = 1), max.plot = FALSE,
+    min.plot = FALSE, rand.plot = FALSE, fill.area = (max.plot &
+        min.plot), maxminrand.col = grey(0.5), fill.color = grey(0.95),
+    ...) {
+    # auc.type <- match.arg(auc.type)
+    tmpAUC <- DescTools::AUC(x[, 1], x[, 2], na.rm = FALSE)
+    min <- 0
+    max <- 1
+    if (is.null(xlab)) {
+        my.xlab <- "Recall"
+    }
+    else {
+        my.xlab <- xlab
+    }
+    if (is.null(ylab)) {
+        my.ylab <- "Precision"
+    }
+    else {
+        my.ylab <- ylab
+    }
+    if (is.null(main)) {
+        my.main <- "PR curve"
+    }
+    else {
+        my.main <- main
+    }
+    if (auc.main) {
+        my.main <- paste(my.main, "\nAUC = ", format(tmpAUC), sep = "", collapse = "")
+    }
+
+            cols <- PRROC:::getColor(scale.color, x[, 3], min, max)
+            plotscale.color = T
+            segment = T
+
+    if (!add & !is.na(legend) & (is.numeric(legend) | suppressWarnings(legend ==
+        TRUE)) & plotscale.color) {
+        if (is.logical(legend)) {
+            legend <- 4
+        }
+        m <- NULL
+        widths <- rep(1, 2)
+        heights <- rep(1, 2)
+        if (legend == 1) {
+            m <- matrix(c(1, 2), nrow = 2)
+            heights <- c(4, lcm(2))
+        }
+        else if (legend == 2) {
+            m <- matrix(c(2, 1), nrow = 1)
+            widths = c(lcm(2.5), 4)
+        }
+        else if (legend == 3) {
+            m <- matrix(c(2, 1), nrow = 2)
+            heights = c(lcm(2), 4)
+        }
+        else {
+            m <- matrix(c(1, 2), nrow = 1)
+            widths = c(4, lcm(2.5))
+        }
+        layout(mat = m, widths = widths, heights = heights)
+    }
+    if (!add) {
+        plot(0, xlim = xlim, ylim = ylim, col = 0, xlab = my.xlab,
+            ylab = my.ylab, main = my.main, ...)
+    }
+    d = nrow(x)
+    if (segment) {
+        segments(x[1:(d - 1), 1], x[1:(d - 1), 2], x[2:d, 1],
+            x[2:d, 2], col = cols, lwd = lwd, ...)
+    }
+    else {
+        lines(x[, 1], x[, 2], col = cols, lwd = lwd, ...)
+    }
+    if (!add & legend & !is.numeric(color) & color == TRUE) {
+        scale <- seq(min, max, length = 100)
+        cols <- PRROC:::getColor(scale.color, scale, min, max)
+        bak <- par("mar")
+        on.exit(par(mar = bak))
+        if (legend == 2 | legend == 4) {
+            if (legend == 4) {
+                par(mar = c(5, 1, 4, 2) + 0.1)
+            }
+            else {
+                par(mar = c(5, 2, 4, 1) + 0.1)
+            }
+            image(c(1), scale, matrix(scale, nrow = 1), col = cols,
+                xlab = "", ylab = "", axes = F)
+        }
+        else {
+            if (legend == 1) {
+                par(mar = c(2, 4, 0, 2) + 0.1)
+            }
+            else {
+                par(mar = c(0, 4, 2, 2) + 0.1)
+            }
+            image(scale, c(1), matrix(scale, ncol = 1), col = cols,
+                xlab = "", ylab = "", axes = F)
+        }
+        axis(legend)
+        layout(1)
+    }
+}
+
+
 

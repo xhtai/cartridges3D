@@ -76,22 +76,25 @@ Sys.time()
 Consolidating results and removing duplicates:
 ```{r consolidate, eval = FALSE}
 load("./allMetadata_3-17-2019.Rdata")
+metadata$rdataName3D <- paste0(metadata$X3Dfilename, ".Rdata")
+
+fileList <- system("ls *.Rdata", intern = TRUE)
 
 allResults <- c()
 for (i in 1:(length(fileList))) {
-    # if (i %% 10000 == 0) cat(i, ", ")
     load(fileList[i])
     compare$newImage <- fileList[i]
+
     allResults <- rbind(allResults, compare)
 }
-allResults$compare <- unlist(lapply(strsplit(allResults$compare, split = "/"), FUN = function(x) x[3]))
-allResults <- dplyr::left_join(allResults, metadata[, c("rdataName", "GunNumber")], by = c("compare" = "rdataName"))
+allResults <- dplyr::left_join(allResults, metadata[, c("rdataName3D", "GunNumber")], by = c("compare" = "rdataName3D"))
 names(allResults)[length(names(allResults))] <- "compareGun"
-allResults <- dplyr::left_join(allResults, metadata[, c("rdataName", "GunNumber")], by = c("newImage" = "rdataName"))
+allResults <- dplyr::left_join(allResults, metadata[, c("rdataName3D", "GunNumber")], by = c("newImage" = "rdataName3D"))
 names(allResults)[length(names(allResults))] <- "newGun"
 
 allResults$match <- as.numeric(allResults$compareGun == allResults$newGun)
 
+######################## A-B vs B-A ######################### 
 removedDups <- removeDups(allResults, "corr")
 ```
 
@@ -133,7 +136,11 @@ for (i in 1:nrow(precRecall)) {
 ## Results
 These are example results using the Fadul data set. 
 
-![](allResults_distributionCCFmax_9-24.png)
+![](ABvsBA_Fadul.png)
+
+
+![](matchDist_Fadul.png)
+![](resultsSearch_2018-12-22_Fadul_precisionRecall.png)
 
 
 ## License
