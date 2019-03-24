@@ -130,6 +130,12 @@ for (i in 1:nrow(precRecall)) {
 }
 ```
 
+Getting final clusters:
+
+``` r
+finalClusters <- getClust(removedDups, "minimax0.4", "compare", "newImage")
+```
+
 Results
 -------
 
